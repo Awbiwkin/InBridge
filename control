@@ -1,0 +1,9 @@
+Package: com.lain.bridge
+Name: LainBridge
+Version: 0.2.0
+Architecture: iphoneos-arm64
+Description: wired // wifi chain and sim relay with TTL scrub, pane in Settings
+Maintainer: lain
+Author: lain
+Section: Tweaks
+Depends: firmware (>= 15.0), preferenceloader
