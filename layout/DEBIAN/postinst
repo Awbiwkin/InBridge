@@ -1,0 +1,14 @@
+#!/bin/sh
+L=/var/mobile/Library/Preferences/com.lain.bridge.postinst.txt
+P=/var/jb/Library/LaunchDaemons/com.lain.bridged.plist
+{
+  echo "postinst $(date)"
+  ls -l /var/jb/usr/libexec/lainbridged "$P"
+  launchctl unload "$P"
+  launchctl load -w "$P" || launchctl bootstrap system "$P"
+  launchctl kickstart -k system/com.lain.bridged
+  launchctl list | grep -i lain
+} >> "$L" 2>&1
+chown 501:501 "$L" 2>/dev/null
+chmod 644 "$L" 2>/dev/null
+exit 0
