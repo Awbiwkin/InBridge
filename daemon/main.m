@@ -273,16 +273,23 @@ static void Apply(void) {
     SetSysctl("net.inet6.ip6.hlim", minTTL);
 
     NSDictionary *ifs = Ifaces();
-    NSString *hsIP = ifs[@"bridge100"][@"ip"] ?: ifs[@"ap1"][@"ip"];
-    NSString *hsNet = Net28(hsIP) ?: @"172.20.10.0/28";
+    NSString *hsIP = ifs[@"bridge100"][@"ip"] ?: ([ifs[@"ap1"][@"up"] boolValue] ? ifs[@"ap1"][@"ip"] : nil);
+    BOOL hotspotConfirmed = hsIP.length > 0;
+    NSString *hsNet = Net28(hsIP);
     NSString *upNet = Net28(ifs[@"en0"][@"ip"]);
-    if (mode == 1 && upNet && [upNet isEqualToString:hsNet]) {
+    BOOL doNat = (mode == 1) && hotspotConfirmed;
+
+    if (!hotspotConfirmed) {
+        LOG(@"hotspot not confirmed up yet (no live ap1/bridge100 ip) -- nat deferred, scrub only");
+        Put(@"conflict", @"n/a (hotspot not up yet)");
+    } else if (mode == 1 && upNet && [upNet isEqualToString:hsNet]) {
         LOG(@"WARN subnet conflict: hotspot net %@ == uplink net %@ (routing will break; see README)", hsNet, upNet);
         Put(@"conflict", @"hotspot subnet == uplink subnet");
+        doNat = NO; // do not NAT into a loop
     } else {
         Put(@"conflict", @"none");
     }
-    BOOL ok = ApplyPF(uplink, minTTL, mode == 1, hsNet);
+    BOOL ok = ApplyPF(uplink, minTTL, doNat, hsNet);
     Put(@"pfOK", @(ok));
 }
 
