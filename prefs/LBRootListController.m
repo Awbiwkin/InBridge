@@ -67,7 +67,8 @@ static NSString *LogTail(NSUInteger n) {
     [mode setProperty:DOM forKey:@"defaults"];
     [mode setProperty:@"mode" forKey:@"key"];
     [mode setProperty:@0 forKey:@"default"];
-    [mode setValues:@[@0, @1, @2] titles:modeNames];
+    [mode setProperty:@[@0, @1, @2] forKey:@"validValues"];
+    [mode setProperty:modeNames forKey:@"validTitles"];
     [s addObject:mode];
 
     [s addObject:Group(@"menu 1 // wired chain",
