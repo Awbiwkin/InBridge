@@ -1,0 +1,5 @@
+#!/bin/sh
+P=/var/jb/Library/LaunchDaemons/com.lain.bridged.plist
+launchctl unload "$P" 2>/dev/null
+launchctl load "$P" 2>/dev/null
+exit 0
