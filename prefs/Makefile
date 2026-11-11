@@ -3,7 +3,7 @@ include $(THEOS)/makefiles/common.mk
 BUNDLE_NAME = LainBridgePrefs
 LainBridgePrefs_FILES = LBRootListController.m
 LainBridgePrefs_FRAMEWORKS = UIKit
-LainBridgePrefs_PRIVATE_FRAMEWORKS = Preferences
+LainBridgePrefs_LDFLAGS = -undefined dynamic_lookup
 LainBridgePrefs_INSTALL_PATH = /Library/PreferenceBundles
 LainBridgePrefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 
